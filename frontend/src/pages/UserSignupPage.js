@@ -1,5 +1,6 @@
 import React from "react";
 import { signup } from "../api/apiCalls";
+import Input from "../components/input";
 
 class UserSignupPage extends React.Component {
   state = {
@@ -8,10 +9,18 @@ class UserSignupPage extends React.Component {
     password: null,
     passwordRepeat: null,
     pendingApiCall: false,
+    errors: {},
   };
 
   onChange = (event) => {
     const { value, name } = event.target;
+    // state de bulunan errors objesinin kopyasını alalım
+    const errors = { ...this.state.errors };
+    errors[name] = undefined;
+    this.setState({
+      [name]: value,
+      errors,
+    });
     this.setState({
       [name]: value,
     });
@@ -33,7 +42,11 @@ class UserSignupPage extends React.Component {
     try {
       const response = await signup(userBody);
     } catch (error) {
-      console.log(error);
+      if (error.response.data.validationErrors) {
+        this.setState({
+          errors: error.response.data.validationErrors,
+        });
+      }
     }
 
     this.setState({ pendingApiCall: false });
@@ -54,27 +67,24 @@ class UserSignupPage extends React.Component {
   };
 
   render() {
-    const { pendingApiCall } = this.state;
+    const { pendingApiCall, errors } = this.state;
+    const { username, displayName } = errors;
     return (
       <div className="container">
         <form>
           <h1 className="text-center">Sign Up</h1>
-          <div className="form-group">
-            <label>Username</label>
-            <input
-              className="form-control"
-              name="username"
-              onChange={this.onChange}
-            />
-          </div>
-          <div>
-            <label>Display Name</label>
-            <input
-              className="form-control"
-              name="displayName"
-              onChange={this.onChange}
-            />
-          </div>
+          <Input
+            name="username"
+            label="Username"
+            error={username}
+            onChange={this.onChange}
+          />
+          <Input
+            name="displayName"
+            label="Display Name"
+            error={displayName}
+            onChange={this.onChange}
+          />
           <div>
             <label>Password</label>
             <input

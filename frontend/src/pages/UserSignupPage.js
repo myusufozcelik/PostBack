@@ -17,6 +17,15 @@ class UserSignupPage extends React.Component {
     // state de bulunan errors objesinin kopyasını alalım
     const errors = { ...this.state.errors };
     errors[name] = undefined;
+    if (name === "password" || name === "passwordRepeat") {
+      if (name === "password" && value !== this.state.passwordRepeat) {
+        errors.passwordRepeat = "Password mismatch";
+      } else if (name === "passwordRepeat" && value !== this.state.password) {
+        errors.passwordRepeat = "Password mismatch";
+      } else {
+        errors.passwordRepeat = undefined;
+      }
+    }
     this.setState({
       [name]: value,
       errors,
@@ -68,7 +77,7 @@ class UserSignupPage extends React.Component {
 
   render() {
     const { pendingApiCall, errors } = this.state;
-    const { username, displayName } = errors;
+    const { username, displayName, password, passwordRepeat } = errors;
     return (
       <div className="container">
         <form>
@@ -85,29 +94,27 @@ class UserSignupPage extends React.Component {
             error={displayName}
             onChange={this.onChange}
           />
-          <div>
-            <label>Password</label>
-            <input
-              className="form-control"
-              name="password"
-              onChange={this.onChange}
-              type="password"
-            />
-          </div>
-          <div>
-            <label>Password Repeat</label>
-            <input
-              className="form-control"
-              name="passwordRepeat"
-              onChange={this.onChange}
-              type="password"
-            />
-          </div>
+          <Input
+            name="password"
+            label="Password"
+            error={password}
+            onChange={this.onChange}
+            type="password"
+          />
+
+          <Input
+            name="passwordRepeat"
+            label="Password Repeat"
+            error={passwordRepeat}
+            onChange={this.onChange}
+            type="password"
+          />
+
           <div className="text-center">
             <button
               className="mt-3 btn btn-primary"
               onClick={this.onClickSignup}
-              disabled={pendingApiCall}
+              disabled={pendingApiCall || passwordRepeat !== undefined}
             >
               {pendingApiCall && (
                 <span className="spinner-border spinner-border-sm"></span>

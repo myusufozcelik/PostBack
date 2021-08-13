@@ -20,7 +20,7 @@ i18n.use(initReactI18next).init({
         Username: 'Kullanıcı Adı',
         'Display Name': 'Tercih Edilen İsim',
         Password: 'Şifre',
-        'Password Repeat': 'Şifreyi Tekrarla'
+        'Password Repeat': 'Şifreyi Tekrarlayın'
       },
     },
   },

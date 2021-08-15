@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Bean;
 import com.postback.pb.user.User;
 import com.postback.pb.user.UserService;
 
-@SpringBootApplication(exclude = SecurityAutoConfiguration.class)
+@SpringBootApplication
 public class PbApplication {
 
 	public static void main(String[] args) {

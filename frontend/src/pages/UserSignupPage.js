@@ -3,6 +3,7 @@ import { withTranslation } from "react-i18next";
 import { changeLanguage, signup } from "../api/apiCalls";
 import ButtonWithProgress from "../components/ButtonWithProgress";
 import Input from "../components/input";
+import { withApiProgress } from "../shared/ApiProgress";
 
 class UserSignupPage extends React.Component {
   state = {
@@ -10,7 +11,6 @@ class UserSignupPage extends React.Component {
     displayName: null,
     password: null,
     passwordRepeat: null,
-    pendingApiCall: false,
     errors: {},
   };
 
@@ -47,10 +47,6 @@ class UserSignupPage extends React.Component {
       password,
     };
 
-    this.setState({
-      pendingApiCall: true,
-    });
-
     try {
       const response = await signup(userBody);
     } catch (error) {
@@ -60,8 +56,6 @@ class UserSignupPage extends React.Component {
         });
       }
     }
-
-    this.setState({ pendingApiCall: false });
 
     // Then Catch (Promise) yapısı ile
     // signup(userBody)
@@ -79,8 +73,8 @@ class UserSignupPage extends React.Component {
   };
 
   render() {
-    const { t } = this.props;
-    const { pendingApiCall, errors } = this.state;
+    const { t, pendingApiCall } = this.props;
+    const { errors } = this.state;
     const { username, displayName, password, passwordRepeat } = errors;
     return (
       <div className="container">
@@ -130,4 +124,9 @@ class UserSignupPage extends React.Component {
 
 const UserSignupPageWithTranslation = withTranslation()(UserSignupPage);
 
-export default UserSignupPageWithTranslation;
+const UserSignupPageWithApiProgress = withApiProgress(
+  UserSignupPageWithTranslation,
+  "/api/v1/users"
+);
+
+export default UserSignupPageWithApiProgress;

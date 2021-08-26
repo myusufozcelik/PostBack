@@ -22,6 +22,7 @@ class LoginPage extends Component {
 
   onClickLogin = async (event) => {
     const { username, password } = this.state;
+    const { onLoginSuccess } = this.props;
     event.preventDefault();
     const creds = {
       username: username,
@@ -36,6 +37,7 @@ class LoginPage extends Component {
     try {
       await login(creds);
       push("/"); // / ile homepage e yönlendiriliyor
+      onLoginSuccess(username);
     } catch (apiError) {
       this.setState({
         error: apiError.response.data.message,

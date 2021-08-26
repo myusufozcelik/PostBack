@@ -5,24 +5,26 @@ i18n.use(initReactI18next).init({
   resources: {
     en: {
       translations: {
-        'Sign Up': 'Sign Up',
-        'Password mismatch': 'Password mismatch',
-        Username: 'Username',
-        'Display Name': 'Display Name',
-        Password: 'Password',
-        'Password Repeat': 'Password Repeat',
-        Login: 'Login'
+        "Sign Up": "Sign Up",
+        "Password mismatch": "Password mismatch",
+        Username: "Username",
+        "Display Name": "Display Name",
+        Password: "Password",
+        "Password Repeat": "Password Repeat",
+        Login: "Login",
+        Logout: "Logout",
       },
     },
     tr: {
       translations: {
-        'Sign Up': 'Kayıt Ol',
-        'Password mismatch': 'Lütfen aynı şifreyi giriniz',
-        Username: 'Kullanıcı Adı',
-        'Display Name': 'Tercih Edilen İsim',
-        Password: 'Şifre',
-        'Password Repeat': 'Şifreyi Tekrarlayın',
-        Login: 'Giriş'
+        "Sign Up": "Kayıt Ol",
+        "Password mismatch": "Lütfen aynı şifreyi giriniz",
+        Username: "Kullanıcı Adı",
+        "Display Name": "Tercih Edilen İsim",
+        Password: "Şifre",
+        "Password Repeat": "Şifreyi Tekrarlayın",
+        Login: "Giriş",
+        Logout: "Çıkış",
       },
     },
   },

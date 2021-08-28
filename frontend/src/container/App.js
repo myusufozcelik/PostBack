@@ -11,54 +11,21 @@ import {
   Switch,
 } from "react-router-dom";
 import TopBar from "../components/TopBar";
+import { Authentication } from "../shared/AuthenticationContext";
 
 // BrowserRouter her seferinde backendi tetiklediği için hashrouter kullandık
 class App extends React.Component {
-  state = {
-    isLoggedIn: false,
-    userName: "user1",
-  };
-
-  onLoginSuccess = (userName) => {
-    this.setState({
-      userName: userName,
-      isLoggedIn: true,
-    });
-  };
-
-  onLogoutSuccess = () => {
-    this.setState({
-      isLoggedIn: false,
-      userName: undefined,
-    });
-  };
-
+  static contextType = Authentication;
   render() {
-    const { isLoggedIn, userName } = this.state;
+    const isLoggedIn = this.context.state.isLoggedIn;
 
     return (
       <div>
         <Router>
-          <TopBar
-            userName={userName}
-            isLoggedIn={isLoggedIn}
-            onLogoutSuccess={this.onLogoutSuccess}
-          />
+          <TopBar />
           <Switch>
             <Route exact path="/" component={HomePage} />
-            {!isLoggedIn && (
-              <Route
-                path="/login"
-                component={(props) => {
-                  return (
-                    <LoginPage
-                      {...props}
-                      onLoginSuccess={this.onLoginSuccess}
-                    />
-                  );
-                }}
-              />
-            )}
+            {!isLoggedIn && <Route path="/login" component={LoginPage} />}
             <Route path="/signup" component={UserSignupPage} />
             <Route path="/user/:username" component={UserPage} />
             <Redirect to="/" />

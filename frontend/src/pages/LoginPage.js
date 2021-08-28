@@ -4,8 +4,11 @@ import Input from "../components/input";
 import { login } from "../api/apiCalls";
 import ButtonWithProgress from "../components/ButtonWithProgress";
 import { withApiProgress } from "../shared/ApiProgress";
+import { Authentication } from "../shared/AuthenticationContext";
 
 class LoginPage extends Component {
+  static contextType = Authentication;
+
   state = {
     username: null,
     password: null,
@@ -22,7 +25,7 @@ class LoginPage extends Component {
 
   onClickLogin = async (event) => {
     const { username, password } = this.state;
-    const { onLoginSuccess } = this.props;
+    const { onLoginSuccess } = this.context; // props yerine contextten alıyoruz
     event.preventDefault();
     const creds = {
       username: username,
@@ -35,9 +38,17 @@ class LoginPage extends Component {
       error: null,
     });
     try {
-      await login(creds);
+      const response = await login(creds);
       push("/"); // / ile homepage e yönlendiriliyor
-      onLoginSuccess(username);
+      const authState = {
+        // username: username,
+        // password: password,
+        // displayName: response.data.displayName,
+        // image: response.data.image,
+        ...response.data,
+        password: password,
+      };
+      onLoginSuccess(authState);
     } catch (apiError) {
       this.setState({
         error: apiError.response.data.message,

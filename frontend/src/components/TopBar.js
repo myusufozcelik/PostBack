@@ -2,11 +2,15 @@ import React, { Component } from "react";
 import logo from "../assets/postback.png";
 import { Link } from "react-router-dom";
 import { withTranslation } from "react-i18next";
+import { Authentication } from "../shared/AuthenticationContext";
 
 class TopBar extends Component {
-  render() {
-    const { t, isLoggedIn, userName, onLogoutSuccess } = this.props;
+  static contextType = Authentication;
 
+  render() {
+    const { t } = this.props;
+    const { state, onLogoutSuccess } = this.context;
+    const { isLoggedIn, username } = state;
     let links = (
       <ul className="navbar-nav ml-auto">
         <li>
@@ -26,8 +30,8 @@ class TopBar extends Component {
       links = (
         <ul className="navbar-nav ml-auto">
           <li>
-            <Link className="nav-link" to={`/user/${userName}`}>
-              {userName}
+            <Link className="nav-link" to={`/user/${username}`}>
+              {username}
             </Link>
           </li>
           <li

@@ -1,5 +1,6 @@
 import React from "react";
 import signup from "../api/apiCalls";
+import Input from "../components/input";
 
 class UserSignupPage extends React.Component {
   state = {
@@ -8,12 +9,25 @@ class UserSignupPage extends React.Component {
     password: null,
     passwordRepeat: null,
     pendingApiCall: false,
+    errors: [],
   };
 
   onChangeMethod = (e) => {
     const { name, value } = e.target;
+    const errors = { ...this.state.errors }; // errors state objesinin kopyasını aldık
+    errors[name] = undefined;
+    if (name === "password" || name === "passwordRepeat") {
+      if (name === "password" && value !== this.state.passwordRepeat) {
+        errors.passwordRepeat = "Password mismatch";
+      } else if (name === "passwordRepeat" && value !== this.state.password) {
+        errors.passwordRepeat = "Password mismatch";
+      } else {
+        errors.passwordRepeat = undefined;
+      }
+    }
     this.setState({
       [name]: value,
+      errors,
     });
   };
 
@@ -32,69 +46,57 @@ class UserSignupPage extends React.Component {
 
     try {
       const response = await signup(body);
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      // her aldığımız hata validation hatası olmayabilir bu nedenle kontrol ediyoruz
+      if (error.response.data.validationErrors) {
+        this.setState({
+          errors: error.response.data.validationErrors,
+        });
+      }
     }
 
     this.setState({ pendingApiCall: false });
-
-    //   signup(body)
-    //     .then((response) => {
-    //       this.setState({ pendingApiCall: false });
-    //     })
-    //     .catch((err) => {
-    //       this.setState({
-    //         pendingApiCall: false,
-    //       });
-    //     });
   };
 
   render() {
-    const { pendingApiCall } = this.state;
+    const { pendingApiCall, errors } = this.state;
+    const { username, displayName, password, passwordRepeat } = errors;
     return (
       <div className="container">
         <form>
           <h1 className="text-center">Sign Up</h1>
-          <div className="form-group">
-            <label>username</label>
-            <input
-              className="form-control"
-              autoComplete="off"
-              name="username"
-              onChange={this.onChangeMethod}
-            />
-          </div>
-          <div className="form-group">
-            <label>Display Name</label>
-            <input
-              className="form-control"
-              autoComplete="off"
-              name="displayName"
-              onChange={this.onChangeMethod}
-            />
-          </div>
-          <div className="form-group">
-            <label>Password</label>
-            <input
-              className="form-control"
-              name="password"
-              onChange={this.onChangeMethod}
-              type="password"
-            />
-          </div>
-          <div className="form-group">
-            <label>Password Repeat</label>
-            <input
-              className="form-control"
-              name="passwordRepeat"
-              onChange={this.onChangeMethod}
-              type="password"
-            />
-          </div>
+          <Input
+            name="username"
+            label="Username"
+            error={username}
+            onChange={this.onChangeMethod}
+          />
+          <Input
+            name="displayName"
+            label="Display Name"
+            error={displayName}
+            onChange={this.onChangeMethod}
+          />
+          <Input
+            name="password"
+            label="Password"
+            error={password}
+            onChange={this.onChangeMethod}
+            type="password"
+          />
+
+          <Input
+            name="passwordRepeat"
+            label="Password Repeat"
+            error={passwordRepeat}
+            onChange={this.onChangeMethod}
+            type="password"
+          />
+
           <div className="text-center">
             <button
               className="btn btn-primary"
-              disabled={pendingApiCall}
+              disabled={pendingApiCall || passwordRepeat !== undefined}
               onClick={this.onClickSignUp}
             >
               {pendingApiCall && (

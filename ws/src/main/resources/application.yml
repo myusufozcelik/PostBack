@@ -4,6 +4,12 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
+      #hibernate tarafındaki validation engelle
+    properties:
+       javax:
+        persistence:
+          validation:
+            mode: none
   datasource:
     platform: postgres
     url: jdbc:postgresql://localhost:5432/postgres
@@ -12,3 +18,5 @@ spring:
     driverClassName: org.postgresql.Driver
 server:
   port: 8081
+
+

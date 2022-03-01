@@ -1,7 +1,9 @@
 import axios from "axios";
 
-const signup = (body) => {
+export const signup = (body) => {
   return axios.post("/api/v1/users", body);
 };
 
-export default signup;
+export const changeLanguage = (language) => {
+  axios.defaults.headers["accept-language"] = language;
+};

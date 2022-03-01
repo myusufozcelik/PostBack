@@ -17,7 +17,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @NotNull
+    @NotNull(message = "{postback.constraint.username.NotNull.message}")
     @Size(min = 4, max = 255)
     @UniqueUsername
     private String username;
@@ -28,7 +28,7 @@ public class User {
 
     @NotNull
     @Size(min = 8, max = 255)
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).*$")
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).*$", message = "{postback.constrain.password.Pattern.message}")
     private String password;
 
 }

@@ -6,11 +6,14 @@ import reportWebVitals from "./reportWebVitals";
 import "./bootstrap-override.scss";
 import UserSignupPage from "./pages/UserSignupPage";
 import i18n from "./i18n";
+import LoginPage from "./pages/LoginPage";
+import LanguageSelector from "./components/LanguageSelector";
 
 ReactDOM.render(
-  <React.StrictMode>
-    <UserSignupPage />
-  </React.StrictMode>,
+  <div>
+    <LoginPage />
+    <LanguageSelector />
+  </div>,
   document.getElementById("root")
 );
 

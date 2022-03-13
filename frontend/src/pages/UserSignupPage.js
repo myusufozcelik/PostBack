@@ -3,6 +3,7 @@ import { signup } from "../api/apiCalls";
 import Input from "../components/input";
 import { withTranslation } from "react-i18next";
 import ButtonWithProgress from "../components/ButtonWithProgress";
+import { withApiProgress } from "../shared/ApiProgress";
 
 class UserSignupPage extends React.Component {
   state = {
@@ -10,7 +11,6 @@ class UserSignupPage extends React.Component {
     displayName: null,
     password: null,
     passwordRepeat: null,
-    pendingApiCall: false,
     errors: [],
   };
 
@@ -57,14 +57,12 @@ class UserSignupPage extends React.Component {
         });
       }
     }
-
-    this.setState({ pendingApiCall: false });
   };
 
   render() {
-    const { pendingApiCall, errors } = this.state;
+    const { errors } = this.state;
     const { username, displayName, password, passwordRepeat } = errors;
-    const { t } = this.props;
+    const { t, pendingApiCall } = this.props;
     return (
       <div className="container">
         <form>
@@ -111,6 +109,16 @@ class UserSignupPage extends React.Component {
   }
 }
 
-const UserSignUpPageWithTranslation = withTranslation()(UserSignupPage);
+const UserSignupPageWithApiProgress = withApiProgress(
+  UserSignupPage,
+  "/api/v1/users"
+);
+
+const UserSignUpPageWithTranslation = withTranslation()(
+  UserSignupPageWithApiProgress
+);
+// translation özelliğine sahip usersignuppage
+
+// translation ve api özelliğine sahip usersignuppage
 
 export default UserSignUpPageWithTranslation;

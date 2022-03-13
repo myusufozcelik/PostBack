@@ -2,40 +2,15 @@ import React, { Component } from "react";
 import Input from "../components/input";
 import { withTranslation } from "react-i18next";
 import { login } from "../api/apiCalls";
-import axios from "axios";
 import ButtonWithProgress from "../components/ButtonWithProgress";
+import { withApiProgress } from "../shared/ApiProgress";
 
 class LoginPage extends Component {
   state = {
     username: null,
     password: null,
     error: null,
-    pendingApiCall: false,
   };
-
-  componentDidMount() {
-    axios.interceptors.request.use((req) => {
-      this.setState({
-        pendingApiCall: true,
-      });
-      return req;
-    });
-
-    axios.interceptors.response.use(
-      (res) => {
-        this.setState({
-          pendingApiCall: false,
-        });
-        return res;
-      },
-      (error) => {
-        this.setState({
-          pendingApiCall: false,
-        });
-        throw error;
-      }
-    );
-  }
 
   onChange = (event) => {
     const { name, value } = event.target;
@@ -47,6 +22,7 @@ class LoginPage extends Component {
 
   onClickLogin = async (event) => {
     const { username, password } = this.state;
+    const { push } = this.props.history;
     event.preventDefault();
     const creds = {
       username,
@@ -57,6 +33,7 @@ class LoginPage extends Component {
     });
     try {
       await login(creds);
+      push("/");
     } catch (err) {
       this.setState({
         error: err.response.data.message,
@@ -65,8 +42,8 @@ class LoginPage extends Component {
   };
 
   render() {
-    const { t } = this.props;
-    const { username, password, error, pendingApiCall } = this.state;
+    const { t, pendingApiCall } = this.props;
+    const { username, password, error } = this.state;
     const buttonEnabled = username && password;
 
     return (
@@ -99,4 +76,6 @@ class LoginPage extends Component {
   }
 }
 
-export default withTranslation()(LoginPage);
+const LoginPageWithTranslation = withTranslation()(LoginPage);
+
+export default withApiProgress(LoginPageWithTranslation, "/api/v1/auth");

@@ -4,8 +4,11 @@ import { withTranslation } from "react-i18next";
 import { login } from "../api/apiCalls";
 import ButtonWithProgress from "../components/ButtonWithProgress";
 import { withApiProgress } from "../shared/ApiProgress";
+// import { Authentication } from "../shared/AuthenticationContext";
 
 class LoginPage extends Component {
+  // static contextType = Authentication;
+
   state = {
     username: null,
     password: null,
@@ -22,6 +25,7 @@ class LoginPage extends Component {
 
   onClickLogin = async (event) => {
     const { username, password } = this.state;
+    const onLoginSuccess = () => {};
     const { push } = this.props.history;
     event.preventDefault();
     const creds = {
@@ -32,8 +36,15 @@ class LoginPage extends Component {
       error: null,
     });
     try {
-      await login(creds);
+      const response = await login(creds);
       push("/");
+
+      const authState = {
+        ...response.data, // içinde username,displayName,image var. spread ile hepsini aldık
+        password: password,
+      };
+
+      onLoginSuccess(username);
     } catch (err) {
       this.setState({
         error: err.response.data.message,
